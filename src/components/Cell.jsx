@@ -3,4 +3,5 @@ const Cell = ({ index, data, handleClick }) => (
     <span className="emoji">{data?.emoji}</span>
   </div>
 );
+
 export default Cell

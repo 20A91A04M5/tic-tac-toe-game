@@ -5,7 +5,9 @@ import './CategorySelector.css';
 const emojiCategories = {
   Animals: ['🐶', '🐱', '🐰', '🐵'],
   Food: ['🍕', '🍔', '🍩', '🍟'],
-  Sports: ['⚽', '🏀', '🏈', '🎾'],
+  Sports: ['⚽', '🏀', '🏈', '🥎'],
+  Love: ['❤️', '💙', '💝', '❤️‍🔥'],
+  Angry: ['😡', '😤', '🤬', '😠'],
 };
 
 const CategorySelector = ({ setCategories, startGame }) => {
