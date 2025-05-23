@@ -17,7 +17,6 @@
   text-shadow: 1px 1px 4px black;
 }
 
-/* VS Animation */
 .vs-animation-container {
   display: flex;
   justify-content: center;
@@ -94,7 +93,6 @@
   text-shadow: 0 0 20px #fff, 0 0 10px #ffcc00;
 }
 
-/* Animations */
 @keyframes slideInLeft {
   from {
     transform: translateX(-200px);

@@ -1,10 +1,10 @@
-
-
 import React, { useEffect, useState } from 'react';
 import Cell from './Cell';
 import { checkWin } from '../utils/gameLogic';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import Confetti from 'react-confetti';
 
 const MySwal = withReactContent(Swal);
 const initialGrid = Array(9).fill(null);
@@ -14,14 +14,46 @@ const Board = ({ categories }) => {
   const [turn, setTurn] = useState('player1');
   const [history, setHistory] = useState({ player1: [], player2: [] });
   const [winner, setWinner] = useState(null);
+  const [winnerCategory, setWinnerCategory] = useState('');
   const [bgEmoji, setBgEmoji] = useState('');
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  // Detect player category labels
+  const playerCategories = {};
+  for (const categoryName in categories) {
+    for (const key in categories) {
+      if (categories[key] === categories[categoryName]) {
+        playerCategories[key] = Object.entries(categories).find(([name, emojis]) =>
+          emojis.join('') === categories[key].join('')
+        )?.[0];
+      }
+    }
+  }
 
   useEffect(() => {
-    // Set random background emoji from both categories
     const combined = [...categories.player1, ...categories.player2];
     const randomEmoji = combined[Math.floor(Math.random() * combined.length)];
     setBgEmoji(randomEmoji);
+
+    const handleResize = () => setDimensions({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [categories]);
+
+  const getCategoryName = (emoji) => {
+    for (const [name, emojis] of Object.entries(categories)) {
+      if (emojis.includes(emoji)) {
+        return name;
+      }
+    }
+    return '';
+  };
+
+  const playVictorySound = () => {
+    const audio = new Audio('/victory.mp3'); 
+    audio.play();
+  };
 
   const handleClick = (index) => {
     if (grid[index] || winner) return;
@@ -47,22 +79,28 @@ const Board = ({ categories }) => {
     setHistory(newHistory);
 
     if (result) {
+      const winningCategory = getCategoryName(emoji);
       setWinner(player);
-      showWinner(player);
+      setWinnerCategory(winningCategory);
+      setShowCelebration(true);
+      playVictorySound();
+      showWinner(player, winningCategory);
     } else {
       setTurn(player === 'player1' ? 'player2' : 'player1');
     }
   };
 
-  const showWinner = (player) => {
-    MySwal.fire({
-      title: `🎉 ${player.toUpperCase()} Wins!`,
-      text: 'Click below to play again!',
-      icon: 'success',
-      confirmButtonText: 'Play Again',
-      confirmButtonColor: '#3085d6',
-      backdrop: true
-    }).then(() => resetGame());
+  const showWinner = (player, categoryName) => {
+    setTimeout(() => {
+      MySwal.fire({
+        title: `🎉 ${categoryName} Category Wins!`,
+        text: 'Click below to play again!',
+        icon: 'success',
+        confirmButtonText: 'Play Again',
+        confirmButtonColor: '#3085d6',
+        backdrop: true
+      }).then(() => resetGame());
+    }, 1500);
   };
 
   const resetGame = () => {
@@ -70,6 +108,8 @@ const Board = ({ categories }) => {
     setHistory({ player1: [], player2: [] });
     setTurn('player1');
     setWinner(null);
+    setWinnerCategory('');
+    setShowCelebration(false);
 
     const combined = [...categories.player1, ...categories.player2];
     const randomEmoji = combined[Math.floor(Math.random() * combined.length)];
@@ -77,13 +117,14 @@ const Board = ({ categories }) => {
   };
 
   return (
-    <div className="text-center">
-      {!winner && <h4 className="mb-3">{`${turn.toUpperCase()}'s Turn`}</h4>}
+    <div className="text-center position-relative">
+      {!winner && <h4 className="mb-3 text-light">{`${turn.toUpperCase()}'s Turn`}</h4>}
+      {winner && <h2 className="text-warning">{winnerCategory} Category Wins! 🏆</h2>}
 
       <div
         className="board"
         style={{
-          backgroundImage: `url("https://techstory.in/wp-content/uploads/2024/08/TicTacToeCoolMathGames.jpg)`,
+          backgroundImage: `url("/TicTacToe.jpg")`,
           backgroundRepeat: 'repeat',
           backgroundSize: '50px 50px',
         }}
@@ -92,6 +133,20 @@ const Board = ({ categories }) => {
           <Cell key={i} index={i} data={cell} handleClick={handleClick} />
         ))}
       </div>
+
+      {/* 🎉 Celebration Layer */}
+      {showCelebration && (
+        <>
+          <DotLottieReact
+            src="https://lottie.host/b273ea46-036e-49b6-8e63-01163740f2d7/VADaRD7So5.lottie"
+            loop
+            autoplay
+            style={{ position: 'absolute', top: '25%', left: '50%', transform: 'translateX(-50%)', zIndex: 999 }}
+          />
+          <Confetti width={dimensions.width} height={dimensions.height} />
+          <div className="fireworks"></div>
+        </>
+      )}
     </div>
   );
 };

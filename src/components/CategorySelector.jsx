@@ -1,52 +1,3 @@
-// import { useState } from "react";
-
-// const emojiCategories = {
-//   Animals: ['🐶', '🐱', '🐰', '🐵'],
-//   Food: ['🍕', '🍔', '🍩', '🍟'],
-//   Sports: ['⚽', '🏀', '🏈', '🎾'],
-// };
-
-// const CategorySelector = ({ setCategories, startGame }) => {
-//   const [selected, setSelected] = useState({ player1: '', player2: '' });
-
-//   const handleStart = () => {
-//     if (selected.player1 && selected.player2 && selected.player1 !== selected.player2) {
-//       setCategories({
-//         player1: emojiCategories[selected.player1],
-//         player2: emojiCategories[selected.player2],
-//       });
-//       startGame();
-//     }
-//   };
-
-//   return (
-//     <div className="selector">
-//       <h5>Select Emoji Categories</h5>
-//       <div className="row mb-3">
-//         {['player1', 'player2'].map((player, i) => (
-//           <div className="col" key={player}>
-//             <label>{player.toUpperCase()}</label>
-//             <select
-//               className="form-select"
-//               onChange={(e) => setSelected({ ...selected, [player]: e.target.value })}
-//             >
-//               <option value="">-- Select --</option>
-//               {Object.keys(emojiCategories).map(cat => (
-//                 <option key={cat} value={cat}>{cat}</option>
-//               ))}
-//             </select>
-//           </div>
-//         ))}
-//       </div>
-//       <button className="btn btn-success" onClick={handleStart}>Start Game</button>
-//     </div>
-//   );
-// };
-
-// export default CategorySelector;
-
-
-
 
 import { useState } from "react";
 import './CategorySelector.css';
@@ -75,7 +26,7 @@ const CategorySelector = ({ setCategories, startGame }) => {
           player2: emojiCategories[selected.player2],
         });
         startGame();
-      }, 2500); // wait for VS animation
+      }, 2500);
     }
   };
 
@@ -113,19 +64,6 @@ const CategorySelector = ({ setCategories, startGame }) => {
           </button>
         </>
       ) : (
-    //     <div className="vs-animation">
-    //       <h1>
-    //         <span className="emoji-slide">
-    //           {selected.player1} ({emojiCategories[selected.player1][0]})
-    //         </span>{" "}
-    //         <span className="vs-text">VS</span>{" "}
-    //         <span className="emoji-slide">
-    //           {selected.player2} ({emojiCategories[selected.player2][0]})
-    //         </span>
-    //       </h1>
-    //     </div>
-    //   )}
-    // </div>
     <div className="vs-animation-container">
     <div className="fighter left">
         <div className="name">{selected.player1}</div>
