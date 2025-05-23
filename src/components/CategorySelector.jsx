@@ -36,7 +36,7 @@ const CategorySelector = ({ setCategories, startGame }) => {
     <div className="selector-container text-center">
       {!showVS ? (
         <>
-          <h2 className="selector-title">🚀 Choose Your Emoji Category</h2>
+          <h2 className="selector-title"> Choose Your Emoji Category 🫣</h2>
           <div className="row justify-content-center mb-4">
             {['player1', 'player2'].map((player, i) => (
               <div className="col-md-4 col-10 mb-3" key={player}>
@@ -62,7 +62,7 @@ const CategorySelector = ({ setCategories, startGame }) => {
             className="btn btn-primary px-4 py-2 fw-bold fs-5"
             onClick={handleStart}
           >
-            Start Game
+            Start Game 🚀
           </button>
         </>
       ) : (

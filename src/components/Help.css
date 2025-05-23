@@ -29,7 +29,7 @@
 .marquee-content {
   display: inline-block;
   white-space: nowrap;
-  animation: scroll-left-right 20s linear infinite;
+  animation: scroll-center 10s linear forwards;
 }
 
 .marquee-content ul {
@@ -41,13 +41,18 @@
 
 .marquee-content li {
   display: inline;
-  margin-right: 50px;
+  margin-right: 60px;
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
 }
 
-/* Animation */
-@keyframes scroll-left-right {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+@keyframes scroll-center {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(calc(50vw - 50%)); /* Stops in the center */
+  }
 }
+
+
