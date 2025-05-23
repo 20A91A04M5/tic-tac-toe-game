@@ -10,6 +10,7 @@ const MySwal = withReactContent(Swal);
 const initialGrid = Array(9).fill(null);
 
 const Board = ({ categories }) => {
+  const [winningCells, setWinningCells] = useState([]);
   const [grid, setGrid] = useState(initialGrid);
   const [turn, setTurn] = useState('player1');
   const [history, setHistory] = useState({ player1: [], player2: [] });
@@ -19,7 +20,7 @@ const Board = ({ categories }) => {
   const [showCelebration, setShowCelebration] = useState(false);
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
-  // Detect player category labels
+
   const playerCategories = {};
   for (const categoryName in categories) {
     for (const key in categories) {
@@ -82,13 +83,15 @@ const Board = ({ categories }) => {
       const winningCategory = getCategoryName(emoji);
       setWinner(player);
       setWinnerCategory(winningCategory);
+      setWinningCells(result);
       setShowCelebration(true);
       playVictorySound();
-      showWinner(player, winningCategory);
+      setTimeout(() => showWinner(player, winningCategory), 1500);
     } else {
       setTurn(player === 'player1' ? 'player2' : 'player1');
     }
   };
+  
 
   const showWinner = (player, categoryName) => {
     setTimeout(() => {
@@ -109,6 +112,7 @@ const Board = ({ categories }) => {
     setTurn('player1');
     setWinner(null);
     setWinnerCategory('');
+    setWinningCells([])
     setShowCelebration(false);
 
     const combined = [...categories.player1, ...categories.player2];
@@ -124,17 +128,24 @@ const Board = ({ categories }) => {
       <div
         className="board"
         style={{
-          backgroundImage: `url("/TicTacToe.jpg")`,
+          backgroundImage:  `url("/TicTacToe.jpg")`,
           backgroundRepeat: 'repeat',
           backgroundSize: '50px 50px',
         }}
       >
         {grid.map((cell, i) => (
-          <Cell key={i} index={i} data={cell} handleClick={handleClick} />
+          <Cell
+            key={i}
+            index={i}
+            data={cell}
+            handleClick={handleClick}
+            isWinning={Array.isArray(winningCells) && winningCells.includes(i)}
+          />
+
+
         ))}
       </div>
 
-      {/* 🎉 Celebration Layer */}
       {showCelebration && (
         <>
           <DotLottieReact
