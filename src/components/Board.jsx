@@ -96,7 +96,7 @@ const Board = ({ categories }) => {
   const showWinner = (player, categoryName) => {
     setTimeout(() => {
       MySwal.fire({
-        title: `🎉 ${categoryName} Category Wins!`,
+        title: `🎉 ${categoryName} Wins!`,
         text: 'Click below to play again!',
         icon: 'success',
         confirmButtonText: 'Play Again',
