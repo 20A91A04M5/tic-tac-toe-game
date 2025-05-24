@@ -29,7 +29,7 @@ function App() {
       ) : (
         <>
           <Header /> 
-          {/* <Board categories={categories} /> */}
+          
           <Board categories={categories} goBackToCategorySelection={() => setGameStarted(false)} />
         </>
       )}
