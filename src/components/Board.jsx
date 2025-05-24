@@ -10,7 +10,7 @@ import Confetti from 'react-confetti';
 const MySwal = withReactContent(Swal);
 const initialGrid = Array(9).fill(null);
 
-const Board = ({ categories, goBackToCategorySelection }) => {
+const Board = ({ categories, goBackToCategorySelection, playWithAI }) => {
   const [winningCells, setWinningCells] = useState([]);
   const [grid, setGrid] = useState(initialGrid);
   const [turn, setTurn] = useState('player1');
@@ -36,20 +36,12 @@ const Board = ({ categories, goBackToCategorySelection }) => {
     const entry = Object.entries(categories).find(([_, emojis]) =>
       JSON.stringify(emojis) === JSON.stringify(selectedEmojis)
     );
-
-    if (entry) {
-      const [name, emojis] = entry;
-      return { name, emoji: emojis[0] };
-    }
-
-    return { name: 'Unknown', emoji: '❓' };
+    return entry ? { name: entry[0], emoji: entry[1][0] } : { name: 'Unknown', emoji: '❓' };
   };
 
   const getCategoryName = (emoji) => {
     for (const [name, emojis] of Object.entries(categories)) {
-      if (emojis.includes(emoji)) {
-        return name;
-      }
+      if (emojis.includes(emoji)) return name;
     }
     return '';
   };
@@ -59,12 +51,19 @@ const Board = ({ categories, goBackToCategorySelection }) => {
     audio.play();
   };
 
+  const getAvailableEmoji = (emojiSet, usedEmojis) => {
+    const available = emojiSet.filter(e => !usedEmojis.includes(e));
+    return available[Math.floor(Math.random() * available.length)];
+  };
+
   const handleClick = (index) => {
     if (grid[index] || winner) return;
 
     const player = turn;
     const emojiSet = categories[player];
-    const emoji = emojiSet[Math.floor(Math.random() * emojiSet.length)];
+    const usedEmojis = grid.filter(Boolean).map(cell => cell.emoji);
+    const emoji = getAvailableEmoji(emojiSet, usedEmojis);
+    if (!emoji) return;
 
     let newGrid = [...grid];
     let newHistory = { ...history };
@@ -92,13 +91,25 @@ const Board = ({ categories, goBackToCategorySelection }) => {
       setScores(prev => ({ ...prev, [player]: prev[player] + 1 }));
       setTimeout(() => showWinner(player, winningCategory, result, newGrid), 1500);
     } else {
-      setTurn(player === 'player1' ? 'player2' : 'player1');
+      const nextTurn = player === 'player1' ? 'player2' : 'player1';
+      setTurn(nextTurn);
+
+      if (playWithAI && nextTurn === 'player2') {
+        setTimeout(() => aiMove(newGrid, newHistory), 500);
+      }
     }
+  };
+
+  const aiMove = (currentGrid, currentHistory) => {
+    const emptyIndices = currentGrid.map((cell, i) => cell === null ? i : null).filter(i => i !== null);
+    if (emptyIndices.length === 0) return;
+
+    const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    handleClick(randomIndex);
   };
 
   const showWinner = (player, categoryName, winningCells, currentGrid) => {
     const emojis = winningCells.map(index => currentGrid[index]?.emoji || '').join(' ➡️ ');
-
     setTimeout(() => {
       MySwal.fire({
         title: `🎉 ${categoryName} Wins!`,
@@ -126,8 +137,7 @@ const Board = ({ categories, goBackToCategorySelection }) => {
   };
 
   return (
-     <div className="board-score-wrapper">
-      {/* Game Board Section */}
+    <div className="board-score-wrapper">
       <div className="game-area text-center position-relative">
         {!winner && <h4 className="mb-3 text-light">{`${turn.toUpperCase()}'s Turn`}</h4>}
         {winner && <h2 className="text-warning">{winnerCategory} Category Wins! 🏆</h2>}
@@ -152,15 +162,10 @@ const Board = ({ categories, goBackToCategorySelection }) => {
         </div>
       </div>
 
-      {/* Scoreboard Section */}
       <div className="scoreboard text-light d-flex flex-column align-items-center">
         <h5 className="text-primary">🎯 Scoreboard</h5>
-        <p className="mb-1">
-          Player 1 (<span className="text-warning">{getCategoryInfo(categories.player1).emoji} </span>) — <strong>{scores.player1}</strong>
-        </p>
-        <p className="mb-3">
-          Player 2 (<span className="text-warning">{getCategoryInfo(categories.player2).emoji} </span>) — <strong>{scores.player2}</strong>
-        </p>
+        <p className="mb-1">Player 1 (<span className="text-warning">{getCategoryInfo(categories.player1).emoji}</span>) — <strong>{scores.player1}</strong></p>
+        <p className="mb-3">Player 2 (<span className="text-warning">{getCategoryInfo(categories.player2).emoji}</span>) — <strong>{scores.player2}</strong></p>
         <button className="btn btn-outline-primary mt-3" onClick={goBackToCategorySelection}>🔁 Back</button>
       </div>
 

@@ -92,3 +92,6 @@ const CategorySelector = ({ setCategories, startGame }) => {
 };
 
 export default CategorySelector;
+
+
+
