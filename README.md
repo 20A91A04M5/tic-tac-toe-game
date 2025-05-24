@@ -77,3 +77,5 @@ Clean, modular code using React components like Board, Cell, and CategorySelecto
 🧑‍💻 Author
 Made with ❤️ by [ L TIRUMALAPRASAD ]
 Fun meets logic in this emotional twist of classic Tic Tac Toe.
+
+<!-- Failed to upload "emotrix.mp4" -->
