@@ -5,7 +5,7 @@ const LandingPage = ({ onStart }) => {
   return (
     <div className="landing-page">
       <div className="poster-content">
-        <h1 className="game-title">✨ Blink Tac Toe ✨</h1>
+        <h1 className="game-title">✨ EMOTRIX ✨</h1>
         <p className="subtitle">A Vanishing Emoji Twist on Classic Tic Tac Toe!</p>
 
         <img

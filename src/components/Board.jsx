@@ -126,49 +126,42 @@ const Board = ({ categories, goBackToCategorySelection }) => {
   };
 
   return (
-    <div className="text-center position-relative">
-      {!winner && <h4 className="mb-3 text-light">{`${turn.toUpperCase()}'s Turn`}</h4>}
-      {winner && <h2 className="text-warning">{winnerCategory} Category Wins! 🏆</h2>}
+     <div className="board-score-wrapper">
+      {/* Game Board Section */}
+      <div className="game-area text-center position-relative">
+        {!winner && <h4 className="mb-3 text-light">{`${turn.toUpperCase()}'s Turn`}</h4>}
+        {winner && <h2 className="text-warning">{winnerCategory} Category Wins! 🏆</h2>}
 
-      <div
-        className="board"
-        style={{
-          backgroundImage: `url("/TicTacToe.jpg")`,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '50px 50px'
-        }}
-      >
-        {grid.map((cell, i) => (
-          <Cell
-            key={i}
-            index={i}
-            data={cell}
-            handleClick={handleClick}
-            isWinning={Array.isArray(winningCells) && winningCells.includes(i)}
-          />
-        ))}
+        <div
+          className="board"
+          style={{
+            backgroundImage: `url("/TicTacToe.jpg")`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '50px 50px'
+          }}
+        >
+          {grid.map((cell, i) => (
+            <Cell
+              key={i}
+              index={i}
+              data={cell}
+              handleClick={handleClick}
+              isWinning={Array.isArray(winningCells) && winningCells.includes(i)}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="text-light mt-4 d-flex flex-column align-items-center scoreboard">
+      {/* Scoreboard Section */}
+      <div className="scoreboard text-light d-flex flex-column align-items-center">
         <h5 className="text-primary">🎯 Scoreboard</h5>
-
         <p className="mb-1">
-          Player 1 (
-          <span className="text-warning">
-            {getCategoryInfo(categories.player1).emoji} {getCategoryInfo(categories.player1).name}
-          </span>) — <strong>{scores.player1}</strong>
+          Player 1 (<span className="text-warning">{getCategoryInfo(categories.player1).emoji} </span>) — <strong>{scores.player1}</strong>
         </p>
-
         <p className="mb-3">
-          Player 2 (
-          <span className="text-warning">
-            {getCategoryInfo(categories.player2).emoji} {getCategoryInfo(categories.player2).name}
-          </span>) — <strong>{scores.player2}</strong>
+          Player 2 (<span className="text-warning">{getCategoryInfo(categories.player2).emoji} </span>) — <strong>{scores.player2}</strong>
         </p>
-
-        <button className="btn btn-outline-primary mt-3" onClick={goBackToCategorySelection}>
-          🔁 Back
-        </button>
+        <button className="btn btn-outline-primary mt-3" onClick={goBackToCategorySelection}>🔁 Back</button>
       </div>
 
       {showCelebration && (
