@@ -136,6 +136,33 @@ header p {
   animation: fadeOut 5s ease-out forwards;
 }
 
+.scoreboard {
+  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(235, 210, 52, 0.5);
+}
+
+.scoreboard h5{
+  color: #483dc4;
+  font-size: large;
+}
+.scoreboard p{
+  color:#cd4e4e;
+  font-size: medium;
+  font-weight: bold;
+  text-align: center;
+}
+.scoreboard button{
+  background-color: #483dc4;
+  color: #ccc;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+}
+
 @keyframes fadeOut {
   0% { opacity: 0.4; }
   100% { opacity: 0; }
