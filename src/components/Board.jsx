@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Cell from './Cell';
 import { checkWin } from '../utils/gameLogic';
 import Swal from 'sweetalert2';
@@ -21,6 +20,10 @@ const Board = ({ categories, goBackToCategorySelection, playWithAI }) => {
   const [showCelebration, setShowCelebration] = useState(false);
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
   const [scores, setScores] = useState({ player1: 0, player2: 0 });
+  const [isMuted, setIsMuted] = useState(false);
+
+  const clickSoundRef = useRef(new Audio('/select.mp3'));
+  const backSoundRef = useRef(new Audio('/menu.mp3'));
 
   useEffect(() => {
     const combined = [...categories.player1, ...categories.player2];
@@ -46,9 +49,18 @@ const Board = ({ categories, goBackToCategorySelection, playWithAI }) => {
     return '';
   };
 
+  const playSound = (soundRef) => {
+    if (!isMuted && soundRef.current) {
+      soundRef.current.currentTime = 0;
+      soundRef.current.play();
+    }
+  };
+
   const playVictorySound = () => {
-    const audio = new Audio('/victory.mp3');
-    audio.play();
+    if (!isMuted) {
+      const audio = new Audio('/victory.mp3');
+      audio.play();
+    }
   };
 
   const getAvailableEmoji = (emojiSet, usedEmojis) => {
@@ -64,6 +76,8 @@ const Board = ({ categories, goBackToCategorySelection, playWithAI }) => {
     const usedEmojis = grid.filter(Boolean).map(cell => cell.emoji);
     const emoji = getAvailableEmoji(emojiSet, usedEmojis);
     if (!emoji) return;
+
+    playSound(clickSoundRef);
 
     let newGrid = [...grid];
     let newHistory = { ...history };
@@ -93,7 +107,6 @@ const Board = ({ categories, goBackToCategorySelection, playWithAI }) => {
     } else {
       const nextTurn = player === 'player1' ? 'player2' : 'player1';
       setTurn(nextTurn);
-
       if (playWithAI && nextTurn === 'player2') {
         setTimeout(() => aiMove(newGrid, newHistory), 500);
       }
@@ -136,11 +149,20 @@ const Board = ({ categories, goBackToCategorySelection, playWithAI }) => {
     setBgEmoji(randomEmoji);
   };
 
+  const handleBack = () => {
+    playSound(backSoundRef);
+    goBackToCategorySelection();
+  };
+
   return (
     <div className="board-score-wrapper">
       <div className="game-area text-center position-relative">
-        {!winner && <h4 className="mb-3 text-light">{`${turn.toUpperCase()}'s Turn`}</h4>}
-        {winner && <h2 className="text-warning">{winnerCategory} Category Wins! 🏆</h2>}
+        <div className="d-flex justify-content-between align-items-center mb-3 px-4">
+          <span className="text-light">{!winner ? `${turn.toUpperCase()}'s Turn` : `${winnerCategory} Wins 🏆`}</span>&emsp;
+          <button onClick={() => setIsMuted(prev => !prev)} className="btn btn-sm btn-outline-light">
+            {isMuted ? '🔇 Mic Off' : '🔊 Mic On'}
+          </button>
+        </div>
 
         <div
           className="board"
@@ -164,9 +186,13 @@ const Board = ({ categories, goBackToCategorySelection, playWithAI }) => {
 
       <div className="scoreboard text-light d-flex flex-column align-items-center">
         <h5 className="text-primary">🎯 Scoreboard</h5>
-        <p className="mb-1">Player 1 (<span className="text-warning">{getCategoryInfo(categories.player1).emoji}</span>) — <strong>{scores.player1}</strong></p>
-        <p className="mb-3">Player 2 (<span className="text-warning">{getCategoryInfo(categories.player2).emoji}</span>) — <strong>{scores.player2}</strong></p>
-        <button className="btn btn-outline-primary mt-3" onClick={goBackToCategorySelection}>🔁 Back</button>
+        <p className="mb-1">
+          Player 1 (<span className="text-warning">{getCategoryInfo(categories.player1).emoji}</span>) — <strong>{scores.player1}</strong>
+        </p>
+        <p className="mb-3">
+          Player 2 (<span className="text-warning">{getCategoryInfo(categories.player2).emoji}</span>) — <strong>{scores.player2}</strong>
+        </p>
+        <button className="btn btn-outline-danger mt-3" onClick={handleBack}>🔙 Back</button>
       </div>
 
       {showCelebration && (
