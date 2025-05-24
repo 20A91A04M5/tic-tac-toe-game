@@ -46,6 +46,37 @@
   margin-left: 45%;
 }
 
+/* Style the select tags */
+.form-select {
+  background-color: #1b1f3b; /* dark navy background */
+  color: #ffcc00;            /* golden yellow text */
+  border: 2px solid #483dc4; /* primary border */
+  border-radius: 8px;
+  padding: 5px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 8px rgba(72, 61, 196, 0.3);
+}
+
+.form-select:focus {
+  border-color: #cd4e4e;
+  box-shadow: 0 0 10px rgba(205, 78, 78, 0.6);
+  outline: none;
+}
+
+.form-select option {
+  background-color: #ffffff;
+  color: #1b1f3b;
+  font-weight: 500;
+}
+
+.form-select:hover {
+  border-color: #cd4e4e;
+  cursor: pointer;
+}
+
+
+
 .fighter {
   width: 40%;
   display: flex;

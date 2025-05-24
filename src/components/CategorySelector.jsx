@@ -45,7 +45,7 @@ const CategorySelector = ({ setCategories, startGame }) => {
           <div className="row justify-content-center mb-4">
             {['player1', 'player2'].map((player) => (
               <div className="col-md-4 col-10 mb-3" key={player}>
-                <label className="form-label text-light fs-5">{player.toUpperCase()}</label>
+                <label className="form-label text-light fs-5">{player.toUpperCase()}</label>&emsp;
                 <select
                   className="form-select"
                   value={selected[player]}
